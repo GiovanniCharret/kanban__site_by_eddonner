@@ -1,0 +1,13 @@
+.git
+.next
+node_modules
+coverage
+test-results
+playwright-report
+frontend/.next
+frontend/node_modules
+frontend/coverage
+frontend/test-results
+backend/.venv
+__pycache__
+*.pyc
