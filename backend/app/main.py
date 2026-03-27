@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, Response, status
@@ -5,6 +6,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from app.board import BoardModel
+from app.db import get_board_for_user, init_db, save_board_for_user
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
@@ -13,7 +16,14 @@ SESSION_COOKIE = "kanban_session"
 VALID_USERNAME = "user"
 VALID_PASSWORD = "password"
 
-app = FastAPI(title="Kanban MVP Backend")
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title="Kanban MVP Backend", lifespan=lifespan)
 
 
 class LoginRequest(BaseModel):
@@ -23,6 +33,13 @@ class LoginRequest(BaseModel):
 
 def is_authenticated(request: Request) -> bool:
     return request.cookies.get(SESSION_COOKIE) == VALID_USERNAME
+
+
+def require_authenticated_username(request: Request) -> str:
+    if not is_authenticated(request):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
+    return VALID_USERNAME
 
 
 @app.get("/api/health")
@@ -57,6 +74,19 @@ async def login(payload: LoginRequest, response: Response) -> dict[str, bool | s
 async def logout(response: Response) -> dict[str, bool]:
     response.delete_cookie(key=SESSION_COOKIE, path="/")
     return {"authenticated": False}
+
+
+@app.get("/api/board")
+async def get_board(request: Request) -> BoardModel:
+    username = require_authenticated_username(request)
+    return get_board_for_user(username)
+
+
+@app.put("/api/board")
+async def update_board(board: BoardModel, request: Request) -> BoardModel:
+    username = require_authenticated_username(request)
+    save_board_for_user(username, board)
+    return get_board_for_user(username)
 
 
 @app.get("/")

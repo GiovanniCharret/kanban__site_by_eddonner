@@ -119,14 +119,14 @@ Success criteria:
 
 Checklist:
 
-- [ ] Add SQLite initialization on startup
-- [ ] Seed or create the MVP user record as needed
-- [ ] Seed or create a default board for the MVP user
-- [ ] Add `GET` route to fetch the current user's board
-- [ ] Add write route(s) to persist board changes for the current user
-- [ ] Validate incoming board payloads
-- [ ] Add backend unit tests for database and service logic
-- [ ] Add API integration tests for board fetch and update flows
+- [x] Add SQLite initialization on startup
+- [x] Seed or create the MVP user record as needed
+- [x] Seed or create a default board for the MVP user
+- [x] Add `GET` route to fetch the current user's board
+- [x] Add write route(s) to persist board changes for the current user
+- [x] Validate incoming board payloads
+- [x] Add backend unit tests for database and service logic
+- [x] Add API integration tests for board fetch and update flows
 
 ## Phase 7: Frontend and Backend Integration
 

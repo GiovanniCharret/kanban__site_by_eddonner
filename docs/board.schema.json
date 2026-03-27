@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.kanban/docs/board.schema.json",
+  "title": "Kanban Board",
+  "description": "JSON blob stored in SQLite for one user's single MVP board.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["columns"],
+  "properties": {
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/column"
+      }
+    }
+  },
+  "$defs": {
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "details"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "details": {
+          "type": "string"
+        }
+      }
+    },
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "cards"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string"
+        },
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/card"
+          }
+        }
+      }
+    }
+  }
+}
