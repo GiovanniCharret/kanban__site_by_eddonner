@@ -179,14 +179,14 @@ Success criteria:
 
 Checklist:
 
-- [ ] Define the structured AI response schema
-- [ ] Define the supported operation types
-- [ ] Implement backend prompt construction with board state and chat history
-- [ ] Parse and validate model outputs
-- [ ] Apply valid operations to the stored board
-- [ ] Return both assistant text and applied changes to the frontend
-- [ ] Add unit tests for operation validation and application
-- [ ] Add API integration tests for AI-assisted board updates
+- [x] Define the structured AI response schema
+- [x] Define the supported operation types
+- [x] Implement backend prompt construction with board state and chat history
+- [x] Parse and validate model outputs
+- [x] Apply valid operations to the stored board
+- [x] Return both assistant text and applied changes to the frontend
+- [x] Add unit tests for operation validation and application
+- [x] Add API integration tests for AI-assisted board updates
 
 Suggested operation set:
 

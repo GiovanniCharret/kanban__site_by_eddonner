@@ -55,3 +55,53 @@ def test_run_openrouter_prompt_raises_without_key(monkeypatch: pytest.MonkeyPatc
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     with pytest.raises(ai.OpenRouterError, match="OPENROUTER_API_KEY"):
         ai.run_openrouter_prompt("hello")
+
+
+def test_ai_chat_applies_operations_and_persists_board(
+    client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sign_in(client)
+
+    def fake_prompt(_: str, max_tokens: int = 32) -> dict[str, str]:
+        assert max_tokens == 800
+        return {
+            "prompt": "ignored",
+            "response_text": """
+            {
+              "assistant_message": "I renamed the column and added the card.",
+              "operations": [
+                {"type": "rename_column", "column_id": "todo", "title": "Next Up"},
+                {
+                  "type": "create_card",
+                  "column_id": "todo",
+                  "card_id": "card-7",
+                  "title": "Plan release notes",
+                  "details": "Draft the MVP release summary."
+                }
+              ]
+            }
+            """,
+        }
+
+    monkeypatch.setattr("app.main.run_openrouter_prompt", fake_prompt)
+
+    response = client.post(
+        "/api/ai/chat",
+        json={
+            "message": "Rename To Do to Next Up and add a release notes card there.",
+            "history": [{"role": "user", "content": "Let's clean up the board."}],
+        },
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["assistant_message"] == "I renamed the column and added the card."
+    assert body["operations"][0]["type"] == "rename_column"
+    assert body["board"]["columns"][1]["title"] == "Next Up"
+    assert body["board"]["columns"][1]["cards"][-1]["id"] == "card-7"
+
+    board_response = client.get("/api/board")
+    assert board_response.status_code == 200
+    saved_board = board_response.json()
+    assert saved_board["columns"][1]["title"] == "Next Up"
+    assert saved_board["columns"][1]["cards"][-1]["id"] == "card-7"

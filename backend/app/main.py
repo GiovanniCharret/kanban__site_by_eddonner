@@ -7,6 +7,14 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from app.ai import OpenRouterError, run_openrouter_prompt
+from app.ai_board import (
+    AIBoardError,
+    AIChatRequest,
+    AIChatResponse,
+    apply_board_operations,
+    build_board_ai_prompt,
+    parse_board_ai_response,
+)
 from app.board import BoardModel
 from app.db import get_board_for_user, init_db, save_board_for_user
 
@@ -73,6 +81,29 @@ async def ai_test(request_data: AiTestRequest, request: Request) -> dict[str, ob
         "prompt": request_data.prompt,
         "answer": result["response_text"],
     }
+
+
+@app.post("/api/ai/chat", response_model=AIChatResponse)
+async def ai_chat(request_data: AIChatRequest, request: Request) -> AIChatResponse:
+    username = require_authenticated_username(request)
+    board = get_board_for_user(username)
+    prompt = build_board_ai_prompt(board, request_data.message, request_data.history)
+
+    try:
+        result = run_openrouter_prompt(prompt, max_tokens=800)
+        parsed = parse_board_ai_response(result["response_text"])
+        updated_board = apply_board_operations(board, parsed.operations)
+    except OpenRouterError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
+    except AIBoardError as exc:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc)) from exc
+
+    save_board_for_user(username, updated_board)
+    return AIChatResponse(
+        assistant_message=parsed.assistant_message,
+        operations=parsed.operations,
+        board=updated_board,
+    )
 
 
 @app.post("/api/login")
