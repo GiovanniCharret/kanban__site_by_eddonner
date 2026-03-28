@@ -159,6 +159,18 @@ Success criteria:
 - A simple backend test route or service call proves AI connectivity with a `2 + 2` prompt
 - Failures are surfaced clearly without over-engineering
 
+Tests
+
+- [ ] Unit test that returns 500 when OPENROUTER_API_KEY is missing
+- [ ] integration test that validade the  2+2 resonde path via live  OpenRouter
+- [ ] unit test that mocks openroutes responses
+- [ ] integration test that validadtes que 2+2 response path via live OpenRouter
+
+Sucess criteria
+
+- OpenRouter connectivity verifiesd and guarded with tests
+- OpenRouter connectivity verified with a live response and guarded with tests
+
 Checklist:
 
 - [x] Add backend settings for OpenRouter configuration
@@ -208,13 +220,13 @@ Success criteria:
 
 Checklist:
 
-- [ ] Design and build a sidebar chat layout within the existing app shell
-- [ ] Add frontend state for chat history and request lifecycle
-- [ ] Send board-aware chat requests to the backend
-- [ ] Render assistant responses clearly
-- [ ] Refresh or reconcile board state after successful AI operations
-- [ ] Add frontend tests for chat UI behavior
-- [ ] Add API integration coverage for chat-triggered board updates
+- [x] Design and build a sidebar chat layout within the existing app shell
+- [x] Add frontend state for chat history and request lifecycle
+- [x] Send board-aware chat requests to the backend
+- [x] Render assistant responses clearly
+- [x] Refresh or reconcile board state after successful AI operations
+- [x] Add frontend tests for chat UI behavior
+- [x] Add API integration coverage for chat-triggered board updates
 
 ## Guardrails
 
