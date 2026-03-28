@@ -140,15 +140,15 @@ Success criteria:
 
 Checklist:
 
-- [ ] Add a frontend API client layer for auth and board requests
-- [ ] Load the board from the backend after login
-- [ ] Persist column rename changes
-- [ ] Persist card creation changes
-- [ ] Persist card deletion changes
-- [ ] Persist drag/drop changes
-- [ ] Handle loading and error states simply
-- [ ] Update frontend tests for backend-backed behavior
-- [ ] Add API integration tests for end-to-end persistence paths
+- [x] Add a frontend API client layer for auth and board requests
+- [x] Load the board from the backend after login
+- [x] Persist column rename changes
+- [x] Persist card creation changes
+- [x] Persist card deletion changes
+- [x] Persist drag/drop changes
+- [x] Handle loading and error states simply
+- [x] Update frontend tests for backend-backed behavior
+- [x] Add API integration tests for end-to-end persistence paths
 
 ## Phase 8: AI Connectivity
 
