@@ -6,6 +6,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from app.ai import OpenRouterError, run_openrouter_prompt
 from app.board import BoardModel
 from app.db import get_board_for_user, init_db, save_board_for_user
 
@@ -53,6 +54,25 @@ async def session(request: Request) -> dict[str, bool | str]:
         return {"authenticated": True, "username": VALID_USERNAME}
 
     return {"authenticated": False}
+
+
+class AiTestRequest(BaseModel):
+    prompt: str = "What is 2 + 2?"
+
+
+@app.post("/api/ai/test")
+async def ai_test(request_data: AiTestRequest, request: Request) -> dict[str, object]:
+    require_authenticated_username(request)
+    try:
+        result = run_openrouter_prompt(request_data.prompt, max_tokens=24)
+    except OpenRouterError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
+
+    return {
+        "success": True,
+        "prompt": request_data.prompt,
+        "answer": result["response_text"],
+    }
 
 
 @app.post("/api/login")

@@ -9,5 +9,9 @@ frontend/node_modules
 frontend/coverage
 frontend/test-results
 backend/.venv
+backend/.pytest_cache
+backend/.pytest-tmp
+backend/pytesttmp
+backend/manual-ai-test.db
 __pycache__
 *.pyc

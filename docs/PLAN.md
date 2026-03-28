@@ -161,11 +161,11 @@ Success criteria:
 
 Checklist:
 
-- [ ] Add backend settings for OpenRouter configuration
-- [ ] Implement a small OpenRouter client in the backend
-- [ ] Add a simple connectivity test path or service-level test harness
-- [ ] Verify a minimal prompt/response flow works locally
-- [ ] Document required environment variables briefly
+- [x] Add backend settings for OpenRouter configuration
+- [x] Implement a small OpenRouter client in the backend
+- [x] Add a simple connectivity test path or service-level test harness
+- [x] Verify a minimal prompt/response flow works locally
+- [x] Document required environment variables briefly
 
 ## Phase 9: AI Board Context and Structured Outputs
 
