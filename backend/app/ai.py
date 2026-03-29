@@ -12,8 +12,9 @@ from dotenv import load_dotenv
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 OPENROUTER_MODEL = "openai/gpt-oss-120b"
 OPENROUTER_TIMEOUT_SECONDS = 15.0
-DOH_RESOLVER_URL = "https://1.1.1.1/dns-query"
-DOH_HOST_HEADER = "cloudflare-dns.com"
+# Uses the domain name so SSL verification works correctly (verify=True default).
+# Trade-off: if DNS is completely broken, this fallback also fails — acceptable for MVP.
+DOH_RESOLVER_URL = "https://cloudflare-dns.com/dns-query"
 
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
@@ -102,11 +103,7 @@ def _post_with_doh_fallback(
 def _resolve_with_doh(hostname: str) -> str:
     response = httpx.get(
         f"{DOH_RESOLVER_URL}?name={hostname}&type=A",
-        headers={
-            "accept": "application/dns-json",
-            "host": DOH_HOST_HEADER,
-        },
-        verify=False,
+        headers={"accept": "application/dns-json"},
         timeout=OPENROUTER_TIMEOUT_SECONDS,
     )
     response.raise_for_status()

@@ -27,7 +27,10 @@ def test_login_accepts_dummy_credentials_and_sets_cookie(client: TestClient) -> 
 
     assert response.status_code == 200
     assert response.json() == {"authenticated": True, "username": "user"}
-    assert response.cookies.get(SESSION_COOKIE) == "user"
+    # Cookie value is now a cryptographically secure random token, not the username
+    token = response.cookies.get(SESSION_COOKIE)
+    assert token is not None
+    assert len(token) >= 32
 
 
 def test_login_rejects_invalid_credentials(client: TestClient) -> None:

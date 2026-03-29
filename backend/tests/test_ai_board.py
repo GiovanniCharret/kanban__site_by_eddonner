@@ -76,3 +76,24 @@ def test_apply_board_operations_rejects_invalid_operations() -> None:
             board,
             [BoardOperationModel(type="move_card", card_id="missing-card", target_column_id="done")],
         )
+
+
+def test_apply_board_operations_maintains_board_integrity() -> None:
+    board = create_default_board()
+    updated = apply_board_operations(
+        board,
+        [
+            BoardOperationModel(
+                type="create_card",
+                column_id="backlog",
+                card_id="card-99",
+                title="Integrity check",
+                details="Verify no duplicates.",
+            ),
+        ],
+    )
+
+    all_ids = [card.id for column in updated.columns for card in column.cards]
+    assert len(all_ids) == len(set(all_ids)), "Duplicate card IDs after operation"
+    assert len(updated.columns) == 5, "Column count must remain 5"
+    assert any(card.id == "card-99" for card in updated.columns[0].cards)

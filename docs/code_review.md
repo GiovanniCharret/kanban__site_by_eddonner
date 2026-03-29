@@ -313,4 +313,66 @@ def test_ai_chat_requer_autenticacao(client: TestClient) -> None:
 
 ---
 
+## Checklist de Implementação
+
+Atualizado em 2026-03-29 após sessão de correções. Médio prazo (M1–M10) deixado como débito técnico consciente.
+
+### Imediato
+
+- [x] **C1** — ~~API Key exposta~~ Falso positivo: `.env` já estava no `.gitignore`
+- [x] **C2** — Cookie de sessão: adicionado `samesite="strict"`; flag `secure` controlada por `SECURE_COOKIES` env var (padrão `false` para dev HTTP local)
+- [x] **C3** — SSL no DOH: removido `verify=False`; URL trocada para `cloudflare-dns.com` (certificado válido)
+- [x] **A1** — Sessão por token: implementado `_sessions: dict[str, str]` com `secrets.token_urlsafe(32)` em vez de cookie `== "user"`
+- [x] **A2** — Credenciais via env vars: `KANBAN_USERNAME` / `KANBAN_PASSWORD` com fallback para valores MVP
+
+### Curto Prazo
+
+- [x] **A3** — Limites de tamanho: `message` max 2000 chars, `history` max 50 itens (Pydantic `Field(max_length=...)`)
+- [x] **A4** — Rate limiting: implementado in-memory para login (10 tentativas / 60s por IP); sem dependência externa
+- [x] **A5** — CORS: `CORSMiddleware` adicionado para `localhost:3000` e `localhost:8000`
+- [x] **A6** — Parsing AI: `ValidationError` capturado separado de `Exception` com contagem de erros
+- [x] **A7** — Controle de acesso: verificado — já estava correto; `require_authenticated_username` retorna username do token server-side
+- [x] **A8** — Rollback de operações: verificado — já estava correto; `apply_board_operations` trabalha em deep copy, save só ocorre se todas as operações passarem
+- [x] **M7** — Validação de env vars no startup: `logger.warning` se `OPENROUTER_API_KEY` ausente (sem raise para não quebrar testes)
+
+### Backlog
+
+- [x] **B1** — API endpoints: constante `API = { SESSION, LOGIN, LOGOUT, BOARD, AI_CHAT }` em `AppShell.tsx`
+- [ ] **B2** — Board padrão duplicado: `createInitialBoard()` (frontend) e `create_default_board()` (backend) ainda separados — refactor futuro
+- [x] **B3** — Validação de título de coluna: `trim()` + `length > 0 && length <= 100` antes de `onBoardChange`
+- [x] **B4** — Paginação de chat renderizado: limitado a `CHAT_RENDER_LIMIT = 50` mensagens exibidas
+- [x] **B5** — Timeout SQLite: `sqlite3.connect(db_path, timeout=10.0)`
+- [x] **B6** — Headers de segurança: implementado como `@app.middleware("http")` no FastAPI (next.config.ts não suporta headers em static export)
+- [x] **B7** — ARIA: `aria-label="Delete card: {title}"` no botão de deletar; teste atualizado para refletir novo label
+- [x] **B8** — Teste de integridade do board: `test_apply_board_operations_maintains_board_integrity` adicionado
+- [x] **B9** — Testes edge case de `moveCard`: 3 novos testes (card inválido, coluna inválida, drop zone)
+- [x] **B10** — Erros async: padrão já consistente — todos os `catch` em `AppShell.tsx` exibem feedback via `setError` / `setChatError`
+- [ ] **B11** — Imports não utilizados: revisão mostrou que `ReactNode`, `useMemo` e `useState` em `KanbanBoard.tsx` são todos usados — não aplicável
+- [x] **B12** — JSDoc: adicionado em `moveCard` com descrição de parâmetros e comportamento em edge cases
+- [x] **B13** — Feedback de erro no save de board: já implementado — `setError` chamado no `catch` de `handleBoardChange`
+- [x] **B14** — Limite de histórico para AI: `chatMessages.slice(-CHAT_HISTORY_LIMIT)` envia no máximo 10 mensagens
+
+### Médio Prazo (não implementado — débito técnico consciente)
+
+- [ ] **M1** — Respostas de erro sem formato padronizado
+- [ ] **M2** — Board sem validação de integridade no PUT
+- [ ] **M3** — Race condition em atualizações do board
+- [ ] **M4** — `getNextCardId` O(n)
+- [ ] **M5** — Board deletado sem fallback
+- [ ] **M6** — IDs de AI não validados antes de aplicar
+- [ ] **M8** — Sem logging estruturado no backend
+- [ ] **M9** — Teste: AI chat sem autenticação deve retornar 401
+- [ ] **M10** — Histórico completo de chat enviado à AI por request (limitado no frontend, não no backend)
+
+### Resultado dos Testes Após Implementação
+
+| Suite | Antes | Depois |
+|-------|-------|--------|
+| Backend | 18 passed | 19 passed (+1 B8) |
+| Frontend | 10 passed | 13 passed (+3 B9) |
+| Cobertura frontend | 80.98% | 82.08% |
+
+---
+
 *Revisão gerada por Claude Code (claude-sonnet-4-6) em 2026-03-29.*
+*Correções implementadas em 2026-03-29.*

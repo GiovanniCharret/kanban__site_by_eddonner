@@ -1,7 +1,7 @@
 import json
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 
 from app.board import BoardModel, CardModel
 
@@ -40,8 +40,8 @@ class AIBoardResponseModel(BaseModel):
 
 
 class AIChatRequest(BaseModel):
-    message: str
-    history: list[ChatMessageModel] = Field(default_factory=list)
+    message: str = Field(..., max_length=2000)
+    history: list[ChatMessageModel] = Field(default_factory=list, max_length=50)
 
 
 class AIChatResponse(BaseModel):
@@ -112,11 +112,16 @@ def parse_board_ai_response(response_text: str) -> AIBoardResponseModel:
 
     try:
         return AIBoardResponseModel.model_validate(data)
+    except ValidationError as exc:
+        raise AIBoardError(f"Invalid AI response structure: {exc.error_count()} validation errors") from exc
     except Exception as exc:
-        raise AIBoardError("Invalid AI response") from exc
+        raise AIBoardError(f"Unexpected parsing error: {type(exc).__name__}") from exc
 
 
 def apply_board_operations(board: BoardModel, operations: list[BoardOperationModel]) -> BoardModel:
+    # Operations are applied to a deep copy; the original board and database are only
+    # updated after all operations succeed. If any operation raises AIBoardError,
+    # the copy is discarded and the stored board is left untouched.
     updated_board = board.model_copy(deep=True)
 
     for operation in operations:
