@@ -72,7 +72,7 @@ class AiTestRequest(BaseModel):
 async def ai_test(request_data: AiTestRequest, request: Request) -> dict[str, object]:
     require_authenticated_username(request)
     try:
-        result = run_openrouter_prompt(request_data.prompt, max_tokens=24)
+        result = run_openrouter_prompt(request_data.prompt, max_tokens=128)
     except OpenRouterError as exc:
         raise HTTPException(status_code=exc.status_code, detail=str(exc)) from exc
 

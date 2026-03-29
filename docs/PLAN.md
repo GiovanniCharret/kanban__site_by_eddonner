@@ -161,14 +161,14 @@ Success criteria:
 
 Tests
 
-- [ ] Unit test that returns 500 when OPENROUTER_API_KEY is missing
-- [ ] integration test that validade the  2+2 resonde path via live  OpenRouter
-- [ ] unit test that mocks openroutes responses
-- [ ] integration test that validadtes que 2+2 response path via live OpenRouter
+- [x] Unit test that returns 500 when OPENROUTER_API_KEY is missing
+- [x] Integration test that validates the `2 + 2` response path via live OpenRouter
+- [x] Unit test that mocks OpenRouter responses
+- [x] Integration test that validates the live `2 + 2` response path through the backend route
 
-Sucess criteria
+Success criteria
 
-- OpenRouter connectivity verifiesd and guarded with tests
+- OpenRouter connectivity is verified and guarded with tests
 - OpenRouter connectivity verified with a live response and guarded with tests
 
 Checklist:

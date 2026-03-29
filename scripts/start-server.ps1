@@ -4,7 +4,10 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $imageName = "kanban-mvp"
 $containerName = "kanban-mvp"
 $dataDir = Join-Path $projectRoot "data"
-$dnsServers = @("1.1.1.1", "8.8.8.8")
+$dnsServers = @()
+if ($env:KANBAN_DOCKER_DNS) {
+  $dnsServers = $env:KANBAN_DOCKER_DNS.Split(",") | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+}
 
 New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
 

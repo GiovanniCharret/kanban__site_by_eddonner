@@ -57,6 +57,38 @@ def test_run_openrouter_prompt_raises_without_key(monkeypatch: pytest.MonkeyPatc
         ai.run_openrouter_prompt("hello")
 
 
+def test_run_openrouter_prompt_with_mocked_response(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
+
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": "4",
+                        }
+                    }
+                ]
+            }
+
+    def fake_post(url: str, json: dict[str, object], headers: dict[str, str], timeout: float) -> FakeResponse:
+        assert url == ai.OPENROUTER_URL
+        assert json["model"] == ai.OPENROUTER_MODEL
+        assert json["messages"] == [{"role": "user", "content": "What is 2 + 2?"}]
+        assert headers["Authorization"] == "Bearer test-key"
+        assert timeout == ai.OPENROUTER_TIMEOUT_SECONDS
+        return FakeResponse()
+
+    monkeypatch.setattr(ai.httpx, "post", fake_post)
+
+    result = ai.run_openrouter_prompt("What is 2 + 2?")
+    assert result["response_text"] == "4"
+
+
 def test_ai_chat_applies_operations_and_persists_board(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
