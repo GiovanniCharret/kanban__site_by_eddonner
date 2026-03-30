@@ -1,0 +1,532 @@
+@import "tailwindcss";
+
+:root {
+  --accent-yellow: #ecad0a;
+  --blue-primary: #209dd7;
+  --purple-secondary: #753991;
+  --dark-navy: #032147;
+  --gray-text: #888888;
+  --paper: #f4f7fb;
+  --surface: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--accent-yellow) 20%, transparent) 0%, transparent 34%),
+    radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--blue-primary) 14%, transparent) 0%, transparent 38%),
+    linear-gradient(160deg, #f9fbfd 0%, #ecf2f9 58%, #e9eef7 100%);
+  color: var(--dark-navy);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 2rem 1.25rem 2.5rem;
+}
+
+.workspace-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 1rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.workspace-board {
+  min-width: 0;
+  overflow: visible;
+}
+
+.workspace-sidebar {
+  position: sticky;
+  top: 1rem;
+  width: 100%;
+}
+
+.hero {
+  margin: 0 auto 1.75rem;
+  max-width: 1600px;
+  animation: reveal-in 500ms ease-out;
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--font-heading), "Segoe UI", sans-serif;
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--blue-primary);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.76rem;
+}
+
+.hero-copy {
+  margin: 0.5rem 0 0;
+  color: var(--gray-text);
+}
+
+.board-status {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+}
+
+.hero-action {
+  flex-shrink: 0;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.auth-card {
+  width: min(100%, 460px);
+  padding: 1.4rem;
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 10%, white);
+  border-radius: 1.2rem;
+  background: color-mix(in srgb, var(--surface) 92%, white 8%);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--dark-navy) 12%, transparent);
+}
+
+.auth-copy {
+  margin: 0.65rem 0 1rem;
+  color: var(--gray-text);
+  line-height: 1.5;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.auth-error {
+  margin: 0.1rem 0;
+  color: var(--purple-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.auth-submit {
+  margin-top: 0.35rem;
+}
+
+/* ── Kanban grid: fill available width, no horizontal scroll ── */
+.kanban-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+}
+
+.chat-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 10%, white);
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--surface) 92%, white), color-mix(in srgb, var(--paper) 78%, white)),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent-yellow) 16%, transparent), transparent 42%);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--dark-navy) 10%, transparent);
+}
+
+.chat-panel-head h2 {
+  margin: 0;
+  font-family: var(--font-heading), "Segoe UI", sans-serif;
+  font-size: 1.3rem;
+}
+
+.chat-copy {
+  margin: 0.45rem 0 0;
+  color: var(--gray-text);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.chat-thread {
+  display: grid;
+  gap: 0.7rem;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.chat-bubble {
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 8%, white);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--dark-navy) 6%, transparent);
+}
+
+.chat-bubble.is-user {
+  background: color-mix(in srgb, var(--blue-primary) 12%, white);
+}
+
+.chat-bubble.is-assistant {
+  background: white;
+}
+
+.chat-role {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--blue-primary);
+}
+
+.chat-text {
+  margin: 0;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.chat-ops {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.8rem;
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--paper) 75%, white);
+}
+
+.chat-ops-title {
+  margin: 0;
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: var(--dark-navy);
+}
+
+.chat-ops-list {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--gray-text);
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+}
+
+.chat-ops-empty {
+  margin: 0;
+  color: var(--gray-text);
+  font-size: 0.86rem;
+}
+
+.chat-form {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.chat-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.chat-submit {
+  justify-self: start;
+}
+
+/* ── Column ── */
+.column {
+  display: flex;
+  flex-direction: column;
+  background: color-mix(in srgb, var(--surface) 86%, white 14%);
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 10%, white);
+  border-radius: 1rem;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--dark-navy) 9%, transparent);
+  min-height: 420px;
+  /* no overflow: hidden — let drag overlay escape */
+}
+
+.column-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.75rem;
+  border-bottom: 2px solid color-mix(in srgb, var(--accent-yellow) 56%, white);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--blue-primary) 8%, white),
+    color-mix(in srgb, var(--accent-yellow) 16%, white)
+  );
+  border-radius: 1rem 1rem 0 0;
+}
+
+.column-title-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--dark-navy);
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: var(--font-heading), "Segoe UI", sans-serif;
+  min-width: 0;
+}
+
+.column-title-input:focus {
+  outline: none;
+}
+
+.column-count {
+  min-width: 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  color: white;
+  background: var(--purple-secondary);
+  flex-shrink: 0;
+}
+
+.column-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.65rem;
+  min-height: 280px;
+  transition: background-color 150ms ease;
+}
+
+.column-card-list.is-over {
+  background: color-mix(in srgb, var(--blue-primary) 12%, transparent);
+}
+
+/* ── Card ── */
+.card-item {
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 8%, white);
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--dark-navy) 7%, transparent);
+  background: var(--surface);
+  transition: opacity 150ms ease, box-shadow 150ms ease;
+}
+
+/* Ghost placeholder while dragging — stays in column but faded */
+.card-item.is-dragging {
+  opacity: 0.35;
+  box-shadow: none;
+  border-style: dashed;
+}
+
+/* Floating card preview rendered in DragOverlay */
+.card-drag-preview {
+  transform: rotate(1.5deg);
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--dark-navy) 22%, transparent);
+  border-color: color-mix(in srgb, var(--blue-primary) 40%, white);
+  cursor: grabbing;
+  opacity: 1 !important;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.card-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  font-family: var(--font-heading), "Segoe UI", sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-details {
+  margin: 0;
+  color: var(--gray-text);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+/* ── Icon buttons: drag handle & delete ── */
+.drag-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: color-mix(in srgb, var(--dark-navy) 30%, white);
+  cursor: grab;
+  padding: 0;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.drag-handle:hover {
+  background: color-mix(in srgb, var(--blue-primary) 14%, white);
+  color: var(--blue-primary);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.delete-card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: color-mix(in srgb, var(--dark-navy) 28%, white);
+  cursor: pointer;
+  padding: 0;
+  transition: background 120ms ease, color 120ms ease;
+  /* hidden until card is hovered */
+  opacity: 0;
+}
+
+.card-item:hover .delete-card-button {
+  opacity: 1;
+}
+
+.delete-card-button:hover {
+  background: color-mix(in srgb, var(--purple-secondary) 12%, white);
+  color: var(--purple-secondary);
+}
+
+/* ── Other buttons ── */
+.add-card-button,
+.primary-button,
+.ghost-button {
+  border: none;
+  border-radius: 0.65rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-card-button {
+  margin: 0 0.65rem 0.65rem;
+  color: var(--dark-navy);
+  background: color-mix(in srgb, var(--accent-yellow) 40%, white);
+}
+
+.add-card-form {
+  margin: 0 0.65rem 0.65rem;
+  display: grid;
+  gap: 0.42rem;
+  padding: 0.65rem;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--paper) 72%, white);
+}
+
+.field-label {
+  font-size: 0.75rem;
+  color: var(--gray-text);
+  font-weight: 700;
+}
+
+.field-input,
+.field-textarea {
+  border: 1px solid color-mix(in srgb, var(--dark-navy) 14%, white);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  font: inherit;
+}
+
+.field-input:focus,
+.field-textarea:focus {
+  outline: 2px solid color-mix(in srgb, var(--blue-primary) 65%, white);
+  border-color: transparent;
+}
+
+.add-card-actions {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.2rem;
+}
+
+.primary-button {
+  color: white;
+  background: var(--purple-secondary);
+}
+
+.ghost-button {
+  color: var(--dark-navy);
+  background: color-mix(in srgb, var(--dark-navy) 8%, white);
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 1200px) {
+  .workspace-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-sidebar {
+    position: static;
+  }
+
+  .kanban-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .hero-top {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .kanban-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .kanban-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .column {
+    min-height: 240px;
+  }
+}
