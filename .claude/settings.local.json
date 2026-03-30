@@ -4,7 +4,9 @@
       "Bash(python -m pytest --tb=short)",
       "Bash(.venv/Scripts/python.exe -m pytest --tb=short)",
       "Bash(.venv/Scripts/python.exe -m pytest --ignore=pytesttmp --tb=short)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Bash(find C:UsersgiochDocumentsAgentsfull-project -type f \\\\\\(-name test_board.py -o -name .env* -o -name tsconfig.json -o -name vitest.config.ts -o -name pytest.ini \\\\\\))",
+      "Bash(grep -E \"\\\\.\\(json|ts|toml|yaml|yml|ini\\)$|dockerfile\")"
     ]
   }
 }
